@@ -173,10 +173,10 @@ else:
 t.goto(0, -222)
 t.write(endMessage, False, align="center", font=("Lato", 12, "italic"))
 
-# print end game message to console
-print(f"\nFINAL SCORE: {score} / 5\n{endMessage}\n")
+# print end game results to console
+print(f"\n----------------------\nFINAL SCORE: {score} / 5\n{endMessage}\n----------------------\n")
 
-# USE FOR DEBUGGING COORDINATES
+# # USE FOR DEBUGGING COORDINATES
 # def click(x, y):
 #     print("Mouse click at:", x, y)
 # screen.onscreenclick(click, 1)
