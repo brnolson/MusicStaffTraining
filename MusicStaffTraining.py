@@ -11,12 +11,11 @@ t.hideturtle()
 t.penup()
 t.speed(100)
 t.goto(0, 225)
-t.write("Welcome to the Grand Staff Training Tool", False, align="center", font=("Lato", 16, "bold"))
+t.write("Welcome to the Grand Staff Training Tool!", False, align="center", font=("Lato", 16, "bold"))
 t.goto(0, 200)
-t.write("Input the note letter that you see displayed on the staff", False, align="center", font=("Lato", 12, "normal"))
-t.goto(0, -225)
-t.write("\u00A92021-Present Brenen Olson All Rights Reserved", False, align="center", font=("Lato", 8, "normal"))
-t.speed()
+t.write("Input the note letter that you see displayed on the staff.", False, align="center", font=("Lato", 12, "normal"))
+t.goto(0, -275)
+t.write("\u00A92021-Present Brenen Olson. All Rights Reserved.", False, align="center", font=("Lato", 8, "normal"))
 
 # store note vertical positions
 notePositions = {
@@ -50,13 +49,13 @@ notePositions = {
 
 noteRadius = 10
 t.pensize(3)
+score = 0
 
 # main event loop
 for i in range(5):
     # move to new position
     note = r.choice(list(notePositions.keys()))
     t.goto(-105 + i * 70, notePositions[note]-noteRadius)
-    print(note)
 
     # draw ledger lines when needed
     if note == "C4-" or note == "C4+" or note == "E2" or note == "A6":
@@ -67,8 +66,10 @@ for i in range(5):
 
         # draw line
         t.pendown()
+        t.color("black")
         t.forward(20)
         t.backward(40)
+        t.color("blue")
         t.penup()
         t.forward(20)
 
@@ -119,12 +120,61 @@ for i in range(5):
         t.forward(noteRadius)
 
     # user interaction
-    userInput = (t.textinput("Enter Your Answer", "Notes Name:")).strip().upper()
-    if userInput == note[0]:
-        print("Good Job")
-    else:
-        print("Keep Trying")
+    notesAvailable = ["A", "B", "C", "D", "E", "F", "G"]
+    attempts = 0
+    title = f"Attempt 1"
+    message = f"Notes Remaining:\n{notesAvailable}:"
 
+    # give three attempts to answer correctly
+    while attempts != 3:
+        userInput = t.textinput(title, message)
+
+        # ensure only valid input is stripped and uppercased
+        if userInput is None:
+            break
+        else:
+            userInput= userInput.strip().upper()
+
+            if userInput in notesAvailable:
+                notesAvailable.remove(userInput)
+                message = f"Notes Remaining:\n{notesAvailable}:"
+            else: 
+                message = f"Only in put Letters From:\n{notesAvailable}:"
+                # skip rest of loop to give unlimited syntax attempts
+                continue
+        
+        # add adjusted score if correct
+        if userInput == note[0]:
+            score += (1 * (0.5 ** attempts))
+            break 
+
+        # handle attempts
+        attempts += 1
+        title = f"{3 - attempts} Attempts Remaining"
+
+    # handle no user input
+    if userInput is None:
+        continue
+
+# write out final score
+t.goto(0, -200)
+t.color("red")
+t.write(f"FINAL SCORE: {score} / 5", False, align="center", font=("Lato", 18, "bold"))
+
+# end game messages
+if score < 2.5:
+    endMessage = "Keep Practicing!"
+elif 2.5 <= score < 4:
+    endMessage = "You're Learning Fast!"
+elif 4 <= score < 5:
+    endMessage = "You're Almost There!"
+else:
+    endMessage = "Perfect!"
+t.goto(0, -222)
+t.write(endMessage, False, align="center", font=("Lato", 12, "italic"))
+
+# print end game message to console
+print(f"\nFINAL SCORE: {score} / 5\n{endMessage}\n")
 
 # USE FOR DEBUGGING COORDINATES
 # def click(x, y):
